@@ -1,14 +1,13 @@
 # 🚀 Dexlyn Perpetuals Trading Bot - Complete Documentation
 
 ## 📖 Table of Contents
-1. [Overview](#overview)
-2. [Quick Start](#quick-start)
-3. [Configuration Files](#configuration-files)
-4. [Order Field Reference](#order-field-reference)
-5. [Trading Strategies](#trading-strategies)
-6. [Advanced Features](#advanced-features)
-7. [Troubleshooting](#troubleshooting)
-8. [API Reference](#api-reference)
+1. [Overview](#-overview)
+2. [Quick Start](#-quick-start)
+3. [Configuration Files](#-configuration-files)
+4. [Order Field Reference](#-order-field-reference)
+5. [Trading Strategies](#-trading-strategies)
+6. [Advanced Features](#️-advanced-features)
+7. [Troubleshooting](#-troubleshooting)
 
 ## 🎯 Overview
 
