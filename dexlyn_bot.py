@@ -613,11 +613,11 @@ class AdvancedTradingEngine:
             "market_close_short": (False, False, True),
             "limit_close_long": (True, False, False),
             "limit_close_short": (False, False, False),
-            "add_to_position": (order_config.get("is_long", True), True, order_config.get("is_market", False)),
+            "add_to_position": (order_config.get("is_long", True), True, order_config.get("is_market", True)),
             "add_collateral": (order_config.get("is_long", True), True, True),
-            "partial_close": (order_config.get("is_long", True), False, order_config.get("is_market", False)),
+            "partial_close": (order_config.get("is_long", True), False, order_config.get("is_market", True)),
             "full_close": (order_config.get("is_long", True), False, order_config.get("is_market", True)),
-            "custom": (order_config.get("is_long", True), order_config.get("is_increase", True), order_config.get("is_market", False))
+            "custom": (order_config.get("is_long", True), order_config.get("is_increase", True), order_config.get("is_market", True))
         }
         
         if action not in action_map:
@@ -782,8 +782,8 @@ def generate_complete_config_files():
                     "action": "market_open_long",
                     "pair": "ETH_USD",
                     "wallet": "trader_1",
-                    "size_usd": 150.0,
-                    "collateral_usd": 75.0,
+                    "size_usd": 300.0,
+                    "collateral_usd": 3.0,
                     "price": 3550.0,
                     "stop_loss": 3195.0,
                     "take_profit": 3905.0,
@@ -794,8 +794,8 @@ def generate_complete_config_files():
                     "action": "limit_open_short",
                     "pair": "ETH_USD",
                     "wallet": "trader_2",
-                    "size_units": 75000000,
-                    "collateral_units": 37500000,
+                    "size_units": 300000000,
+                    "collateral_units": 3000000,
                     "price_units": 3600000000000000,
                     "stop_loss_units": 3960000000000000,
                     "take_profit_units": 3240000000000000,
@@ -806,7 +806,7 @@ def generate_complete_config_files():
                     "action": "add_to_position",
                     "pair": "ETH_USD", 
                     "wallet": "trader_1",
-                    "size_usd": 50.0,
+                    "size_usd": 300.0,
                     "is_long": False,  # Override default
                     "is_market": True, # Override default  
                     "can_execute_above_price": True,  # Manual execution guard
@@ -818,8 +818,8 @@ def generate_complete_config_files():
                     "pair": "ETH_USD",
                     "wallet": "trader_1", 
                     "custom_parameters": {
-                        "size_units": 200000000,
-                        "collateral_units": 100000000,
+                        "size_units": 300000000,
+                        "collateral_units": 3000000,
                         "price_units": 3650000000000000,
                         "is_long": True,
                         "is_increase": True, 
@@ -835,7 +835,7 @@ def generate_complete_config_files():
                     "action": "market_close_long", 
                     "pair": "ETH_USD",
                     "wallet": "trader_1",
-                    "size_usd": 150.0,
+                    "size_usd": 300.0,
                     "wait_before": 10,
                     "description": "Waits 10 seconds before executing"
                 }
