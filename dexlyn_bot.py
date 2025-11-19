@@ -708,7 +708,9 @@ class AdvancedTradeExecutor:
                 child.sendline(self.password)
                 child.sendline("\n")
             except:
-                pass
+                output = child.before or ""
+                logging.error(f"No password prompts detected, error: {output}")
+                return False
 
             confirmation_attempts = self.config_manager.configs["main"]["orders"]["confirmation_attempts"]
             for _ in range(confirmation_attempts):
@@ -716,7 +718,9 @@ class AdvancedTradeExecutor:
                     child.expect([r"\(Y/n\)", r"confirm", r"Press Enter", r"gas", r"fee"], timeout=2)
                     child.sendline('\n')
                 except:
-                    pass
+                    output = child.before or ""
+                    logging.error(f"{output}")
+                    return False
 
             child.expect(expect.EOF, timeout=self.config_manager.configs["main"]["orders"]["default_timeout_seconds"])
             output = child.before or ""
@@ -725,8 +729,8 @@ class AdvancedTradeExecutor:
                 logging.info(f"✅ {order_config['name']} - SUCCESS")
                 return True
             else:
-                logging.info(f"📄 Output: {output[:3000]}...")
-                return True
+                logging.error(f"📄 Output: {output[:3000]}...")
+                return False
                 
         except Exception as e:
             logging.error(f"❌ {order_config['name']} - FAILED: {e}")
