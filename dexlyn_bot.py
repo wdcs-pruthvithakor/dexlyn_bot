@@ -18,6 +18,7 @@ Users can specify any field for each order with complete flexibility.
 ✅ Support for all place_order_v3 parameters
 ✅ Flexible order definitions
 ✅ Validation and error handling
+✅ Customizable Supra CLI command
 """
 
 import os
@@ -33,7 +34,6 @@ import dotenv
 dotenv.load_dotenv()
 
 # ========== DEFAULT CONFIGURATION PATHS ==========
-
 
 CONFIG_PATHS = {
     "main": "config.json",
@@ -208,6 +208,7 @@ COMPLETE_ORDER_FIELDS = {
 DEFAULT_CONFIG = {
     "network": "testnet",
     "default_strategy": "basic_cycle",
+    "supra_command": "supra",
     "trading": {
         "default_size_usd": 300.0,
         "default_collateral_usd": 3.0,
@@ -369,10 +370,8 @@ class ConfigManager:
         """Load all configuration files"""
         if custom_config_path:
             main_config = self.load_json_config(custom_config_path)
-
         else:
             main_config = self.load_json_config(CONFIG_PATHS["main"], DEFAULT_CONFIG)
-        
 
         self.configs = {
             "main": main_config,
@@ -416,11 +415,9 @@ class ConfigManager:
     
     def validate_configs(self):
         """Validate all loaded configurations"""
-
         network = self.configs["main"]["network"]
         if network not in self.configs["network"]:
             raise ValueError(f"Network '{network}' not found in network configuration")
-
         
         strategy = self.configs["main"]["default_strategy"]
         if strategy not in self.configs["strategies"]:
@@ -429,14 +426,12 @@ class ConfigManager:
     def get_network_config(self, network: str = None) -> Dict:
         """Get network-specific configuration"""
         if network is None:
-
             network = self.configs["main"]["network"]
         return self.configs["network"][network]
     
     def get_strategy(self, strategy_name: str = None) -> Dict:
         """Get strategy configuration"""
         if strategy_name is None:
-
             strategy_name = self.configs["main"]["default_strategy"]
         return self.configs["strategies"][strategy_name]
     
@@ -447,6 +442,10 @@ class ConfigManager:
     def get_pair(self, pair_name: str) -> Dict:
         """Get trading pair configuration"""
         return self.configs["pairs"][pair_name]
+    
+    def get_supra_command(self) -> str:
+        """Get the Supra CLI command from config"""
+        return self.configs["main"].get("supra_command", "supra")
 
 # ========== ADVANCED TRADING ENGINE ==========
 
@@ -455,9 +454,9 @@ class AdvancedTradingEngine:
     
     def __init__(self, config_manager: ConfigManager):
         self.config_manager = config_manager
-
         self.network = config_manager.configs["main"]["network"]
         self.network_config = config_manager.get_network_config()
+        self.supra_command = config_manager.get_supra_command()
         self.function_id = f"{self.network_config['contract_address']}::managed_trading::place_order_v3"
         
     def usd_to_units(self, usd_amount: float, decimal_type: str = "size") -> int:
@@ -527,7 +526,6 @@ class AdvancedTradingEngine:
         is_long, is_increase, is_market = self.parse_action_flags(action, order_config)
         
         # Calculate execution guard (can be overridden)
-
         auto_calculate = self.config_manager.configs["main"]["orders"]["auto_calculate_execution_guard"]
         if "can_execute_above_price" in order_config:
             can_execute_above = order_config["can_execute_above_price"]
@@ -680,9 +678,10 @@ class AdvancedTradeExecutor:
             pair = self.config_manager.get_pair(order_config["pair"])
             network_config = self.engine.network_config
             
-            # Build command
+            # Build command with customizable Supra command
+            supra_command = self.engine.supra_command
             cmd = [
-                "supra_new", "move", "tool", "run",
+                supra_command, "move", "tool", "run",
                 "--function-id", self.engine.function_id,
                 "--args", *order_params,
                 "--type-args",
@@ -693,15 +692,16 @@ class AdvancedTradeExecutor:
             ]
             cmd_str = " ".join(shlex.quote(arg) for arg in cmd)
             logging.info(f"🤖 Executing: {order_config['name']}")
-            logging.info(f"Executing: {cmd_str}")
+            logging.info(f"🤖 Executing: {order_config['name']}")
+            logging.info(f"Full command: {cmd_str}")
             if order_config.get("description"):
                 logging.info(f"📝 Description: {order_config['description']}")
             
             # Execute command
-
             child = expect.spawn(cmd_str, encoding='utf-8', timeout=self.config_manager.configs["main"]["orders"]["default_timeout_seconds"])
             child.delaybeforesend = 0.15
             logging.info("🚀 Command sent, awaiting response...")
+            
             # Handle password and confirmations
             try:
                 child.expect([r"[Pp]ass(word|phrase)", r"Enter your password", r"Profile passphrase"], timeout=10)
@@ -718,7 +718,6 @@ class AdvancedTradeExecutor:
                 except:
                     pass
 
-            
             child.expect(expect.EOF, timeout=self.config_manager.configs["main"]["orders"]["default_timeout_seconds"])
             output = child.before or ""
             print("status code:", getattr(child, "exitstatus", 0))
@@ -737,6 +736,7 @@ class AdvancedTradeExecutor:
                 child.close(force=True)
             except Exception:
                 pass
+    
     def execute_strategy(self, strategy_name: str = None) -> bool:
         """Execute a complete trading strategy"""
         strategy = self.config_manager.get_strategy(strategy_name)
@@ -744,6 +744,7 @@ class AdvancedTradeExecutor:
         
         logging.info(f"🔄 Executing strategy: {strategy['name']}")
         logging.info(f"📝 Description: {strategy['description']}")
+        logging.info(f"🔧 Using Supra command: {self.engine.supra_command}")
         
         success_count = 0
         for i, order in enumerate(orders, 1):
@@ -755,7 +756,6 @@ class AdvancedTradeExecutor:
             
             # Sleep between orders (except last one)
             if i < len(orders):
-
                 sleep_time = self.config_manager.configs["main"]["timing"]["sleep_between_orders"]
                 logging.info(f"⏳ Waiting {sleep_time} seconds...")
                 time.sleep(sleep_time)
@@ -923,11 +923,9 @@ class AdvancedDexlynTradingBot:
         self.engine = AdvancedTradingEngine(self.config_manager)
         self.executor = AdvancedTradeExecutor(self.config_manager, self.engine)
     
-
     def run(self, strategy_name: str = None, cycles: int = None):
         """Run the trading bot"""
         if strategy_name is None:
-
             strategy_name = self.configs["main"]["default_strategy"]
         
         strategy = self.config_manager.get_strategy(strategy_name)
@@ -937,6 +935,7 @@ class AdvancedDexlynTradingBot:
         logging.info("🚀 DEXLYN ADVANCED TRADING BOT STARTING")
         logging.info(f"🌐 Network: {self.configs['main']['network']}")
         logging.info(f"📈 Strategy: {strategy['name']}")
+        logging.info(f"🔧 Supra Command: {self.engine.supra_command}")
         logging.info(f"🔁 Cycles: {'Infinite' if cycles == -1 else cycles}")
         logging.info(f"📊 Orders in strategy: {len(strategy.get('orders', []))}")
         
@@ -949,7 +948,6 @@ class AdvancedDexlynTradingBot:
                 success = self.executor.execute_strategy(strategy_name)
                 
                 if cycles == -1 or cycle_count < cycles:
-
                     sleep_time = self.configs["main"]["timing"]["sleep_between_cycles"]
                     logging.info(f"😴 Sleeping {sleep_time} seconds...")
                     time.sleep(sleep_time)
@@ -959,27 +957,12 @@ class AdvancedDexlynTradingBot:
         except Exception as e:
             logging.error(f"💥 Unexpected error: {e}")
 
-# ========== MAIN ENTRY (with early logging setup) ==========
-def setup_early_logging(level: str = 'INFO', logfile: str = 'dexlyn_trading.log', console: bool = True):
-    handlers = []
-    if console:
-        handlers.append(logging.StreamHandler())
-    if logfile:
-        try:
-            handlers.append(logging.FileHandler(logfile, encoding='utf-8'))
-        except Exception:
-            pass
-    logging.basicConfig(level=getattr(logging, level.upper(), logging.INFO),
-                        format='%(asctime)s - %(levelname)s - %(message)s',
-                        handlers=handlers)
-
+# ========== MAIN ENTRY ==========
 
 def main():
     """Main entry point"""
     import argparse
     
-    # EARLY LOGGING SETUP - MOVED TO THE VERY BEGINNING
-    # setup_early_logging(level='INFO', logfile='dexlyn_trading.log', console=True)
     parser = argparse.ArgumentParser(
         description="Dexlyn Perpetuals Trading Bot - Complete Field Customization",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1017,11 +1000,15 @@ Complete Control:
     "is_market": true,
     "can_execute_above_price": false
 
+CUSTOMIZABLE SUPRA COMMAND:
+  supra_command: "supra"     → Change to "supra_new", "supra-cli", or custom path
+
 QUICK START:
 1. Generate configs: python {sys.argv[0]} --generate-configs
 2. Edit wallets.json with your addresses
-3. Set password: export SUPRA_CLI_PASSWORD='your#password'
-4. Run: python {sys.argv[0]} --strategy complete_examples
+3. Edit config.json to change supra_command if needed
+4. Set password: export SUPRA_CLI_PASSWORD='your#password'
+5. Run: python {sys.argv[0]} --strategy complete_examples
 
 EXAMPLES:
   
@@ -1033,6 +1020,9 @@ EXAMPLES:
 
   Custom strategy file:
     python {sys.argv[0]} --custom-config my_strategy.json
+
+  Custom Supra command:
+    Edit config.json: "supra_command": "supra_new"
         """
     )
     
@@ -1044,12 +1034,14 @@ EXAMPLES:
     parser.add_argument("--custom-config", help="Custom strategy JSON file")
     
     args = parser.parse_args()
+    
+    # Setup logging
     log_config = DEFAULT_CONFIG.get("logging", {})
     log_config = ConfigManager(args.config_dir).load_json_config(CONFIG_PATHS["main"], DEFAULT_CONFIG).get("logging", log_config)
-    print(log_config)
     env_level = log_config["level"] if log_config["level"] else "INFO"
-    log_file = log_config.get("log_file", "dexlyn_trading_3.log")
+    log_file = log_config.get("log_file", "dexlyn_trading.log")
     console_output = log_config.get("console_output", True)
+    
     logger = logging.getLogger()
     logger.setLevel(getattr(logging, env_level.upper()))
     
@@ -1064,7 +1056,7 @@ EXAMPLES:
     logger.addHandler(new_handler)
     
     print("\n=== DEXLYN PERPETUALS TRADING BOT - COMPLETE FIELD CUSTOMIZATION ===\n")
-    print("\n=== DEXLYN PERPETUALS TRADING BOT - COMPLETE FIELD CUSTOMIZATION ===\n")
+    
     if args.generate_configs:
         generate_complete_config_files()
         print("🎉 All configuration files generated with complete examples!")
@@ -1085,7 +1077,6 @@ EXAMPLES:
     print("🔒 Password loaded from environment variable.")
 
     try:
-
         bot = AdvancedDexlynTradingBot(args.config_dir)
 
         if args.custom_config:
