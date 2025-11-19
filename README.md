@@ -511,7 +511,7 @@ pip install pexpect wexpect python-dotenv
 ### Risk Management
 1. **Start Small**: Begin with testnet and small position sizes
 2. **Use Stop Losses**: Always set stop losses for protection
-3. **Manage Leverage**: Avoid excessive leverage (2-5x recommended)
+3. **Manage Leverage**: Avoid excessive leverage (5-10x recommended)
 4. **Position Sizing**: Don't risk more than 2-5% per trade
 5. **Diversify**: Use multiple pairs and strategies
 
