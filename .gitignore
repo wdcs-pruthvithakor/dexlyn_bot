@@ -1,0 +1,4 @@
+my_configs/*
+*.json
+*.log
+.env
