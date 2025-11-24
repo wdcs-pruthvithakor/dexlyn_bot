@@ -1,0 +1,68 @@
+{
+  "portfolio_distribution": {
+    "name": "Multi-Wallet Portfolio Distribution",
+    "description": "Distribute trades across multiple wallets for risk management",
+    "network": "testnet", 
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Wallet 1 - ETH Long Core",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 25.0,
+        "price": 3500.0,
+        "description": "Core long position in wallet 1"
+      },
+      {
+        "name": "Wallet 2 - ETH Short Hedge", 
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 500.0,
+        "collateral_usd": 12.5,
+        "price": 3520.0,
+        "description": "Hedge position in wallet 2"
+      },
+      {
+        "name": "Wallet 1 - BTC Diversification",
+        "action": "market_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 750.0,
+        "collateral_usd": 15.0,
+        "price": 50000.0,
+        "description": "BTC exposure in wallet 1"
+      },
+      {
+        "name": "Wallet 2 - BTC Short Spec", 
+        "action": "market_open_short",
+        "pair": "BTC_USD",
+        "wallet": "trader_2",
+        "size_usd": 450.0,
+        "collateral_usd": 5.0,
+        "price": 50500.0,
+        "description": "BTC short speculation in wallet 2"
+      },
+      {
+        "name": "Close Wallet 1 ETH",
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1", 
+        "size_usd": 300.0,
+        "price": 3600.0,
+        "description": "Close ETH position in wallet 1"
+      },
+      {
+        "name": "Close Wallet 2 ETH",
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 500.0,
+        "price": 3480.0,
+        "description": "Close ETH position in wallet 2"
+      }
+    ]
+  }
+}

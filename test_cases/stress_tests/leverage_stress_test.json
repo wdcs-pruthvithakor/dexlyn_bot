@@ -1,0 +1,73 @@
+{
+  "leverage_stress_test": {
+    "name": "Leverage Stress Test - 150x Maximum",
+    "description": "Stress test maximum leverage positions with safety delays",
+    "network": "testnet", 
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Max Leverage ETH Long - 150x",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 450.0,
+        "collateral_usd": 3.0,
+        "price": 3500.0,
+        "description": "Maximum 150x leverage long position",
+        "wait_before": 65
+      },
+      {
+        "name": "Max Leverage ETH Short - 150x",
+        "action": "market_open_short", 
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 450.0,
+        "collateral_usd": 3.0,
+        "price": 3500.0,
+        "description": "Maximum 150x leverage short position",
+        "wait_before": 65
+      },
+      {
+        "name": "Premium Max Leverage - 150x",
+        "action": "market_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 1500.0,
+        "collateral_usd": 10.0,
+        "price": 50000.0,
+        "description": "Premium 150x leverage with 10$ collateral",
+        "wait_before": 65
+      },
+      {
+        "name": "Close Max Leverage ETH Long", 
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 450.0,
+        "price": 3550.0,
+        "description": "Close max leverage long after 60s",
+        "wait_before": 65
+      },
+      {
+        "name": "Close Max Leverage ETH Short",
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 450.0,
+        "price": 3450.0,
+        "description": "Close max leverage short after 60s",
+        "wait_before": 65
+      },
+      {
+        "name": "Close Premium Max Leverage BTC", 
+        "action": "market_close_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 1500.0,
+        "price": 51000.0,
+        "description": "Close premium max leverage position",
+        "wait_before": 65
+      }
+    ]
+  }
+}

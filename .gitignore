@@ -2,3 +2,7 @@ my_configs/*
 *.json
 *.log
 .env
+__pycache__/*
+# Allow JSON files inside test_cases/ and its subfolders
+!test_cases/
+!test_cases/**/*.json

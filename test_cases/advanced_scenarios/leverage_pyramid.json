@@ -1,0 +1,74 @@
+{
+  "leverage_pyramid": {
+    "name": "Leverage Pyramid Strategy",
+    "description": "Build positions with increasing leverage as price moves favorably",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Base Position - Conservative 20x",
+        "action": "market_open_long", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 60.0,
+        "collateral_usd": 3.0,
+        "price": 3500.0,
+        "description": "Base position with 20x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "First Pyramid - Moderate 50x",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1", 
+        "size_usd": 150.0,
+        "collateral_usd": 3.0,
+        "price": 3550.0,
+        "description": "First pyramid layer at 50x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Second Pyramid - Aggressive 100x",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0,
+        "price": 3600.0, 
+        "description": "Second pyramid layer at 100x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Final Pyramid - Maximum 150x",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 450.0,
+        "collateral_usd": 3.0,
+        "price": 3650.0,
+        "description": "Final pyramid layer at 150x max leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Pyramid Unwind - Partial Close",
+        "action": "partial_close", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 480.0,
+        "price": 3700.0,
+        "description": "Close 50% of pyramid position",
+        "wait_before": 65
+      },
+      {
+        "name": "Pyramid Unwind - Full Close",
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 480.0,
+        "price": 3750.0,
+        "description": "Close remaining pyramid position",
+        "wait_before": 65
+      }
+    ]
+  }
+}

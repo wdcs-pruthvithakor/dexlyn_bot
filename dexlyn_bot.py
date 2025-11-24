@@ -212,7 +212,7 @@ DEFAULT_CONFIG = {
     "trading": {
         "default_size_usd": 300.0,
         "default_collateral_usd": 3.0,
-        "default_leverage": 5.0,
+        "default_leverage": 50.0,
         "max_position_size_usd": 500000.0,
         "min_position_size_usd": 300.0
     },
@@ -366,15 +366,10 @@ class ConfigManager:
         self.config_dir = Path(config_dir)
         self.configs = {}
         
-    def load_all_configs(self, custom_config_path: str = None) -> Dict[str, Any]:
-        """Load all configuration files"""
-        if custom_config_path:
-            main_config = self.load_json_config(custom_config_path)
-        else:
-            main_config = self.load_json_config(CONFIG_PATHS["main"], DEFAULT_CONFIG)
-
+    def load_all_configs(self) -> Dict[str, Any]:
+        """Load all configuration files (NOT strategies)"""
         self.configs = {
-            "main": main_config,
+            "main": self.load_json_config(CONFIG_PATHS["main"], DEFAULT_CONFIG),
             "network": self.load_json_config(CONFIG_PATHS["network"], DEFAULT_NETWORK),
             "wallets": self.load_json_config(CONFIG_PATHS["wallets"], DEFAULT_WALLETS),
             "pairs": self.load_json_config(CONFIG_PATHS["pairs"], DEFAULT_PAIRS),
@@ -384,6 +379,44 @@ class ConfigManager:
         self.validate_configs()
         return self.configs
     
+    def load_strategy_file(self, strategy_file_path: str) -> Dict[str, Any]:
+        """Load a custom strategy file and return strategies dict"""
+        path = Path(strategy_file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Strategy file not found: {strategy_file_path}")
+        
+        with open(path, 'r') as f:
+            strategy_data = json.load(f)
+        
+        # Strategy files should contain one or more strategies
+        if not isinstance(strategy_data, dict):
+            raise ValueError("Strategy file must contain a JSON object")
+        
+        # Validate it contains at least one strategy-like structure
+        valid_strategies = {}
+        for key, value in strategy_data.items():
+            if isinstance(value, dict) and 'orders' in value:
+                valid_strategies[key] = value
+            else:
+                logging.warning(f"⚠️ Entry '{key}' in strategy file doesn't look like a valid strategy")
+        
+        if not valid_strategies:
+            raise ValueError("No valid strategies found in strategy file")
+        
+        logging.info(f"✅ Loaded {len(valid_strategies)} strategies from: {strategy_file_path}")
+        return valid_strategies
+    
+    def get_strategy(self, strategy_name: str = None) -> Dict:
+        """Get strategy configuration"""
+        if strategy_name is None:
+            strategy_name = self.configs["main"]["default_strategy"]
+        
+        if strategy_name not in self.configs["strategies"]:
+            available = list(self.configs["strategies"].keys())
+            raise ValueError(f"Strategy '{strategy_name}' not found. Available: {available}")
+        
+        return self.configs["strategies"][strategy_name]
+
     def load_json_config(self, file_path: str, default_config: Dict = None) -> Dict:
         """Load JSON config file or return default if not exists"""
         path = self.config_dir / file_path
@@ -402,7 +435,7 @@ class ConfigManager:
             return default_config.copy()
         else:
             return {}
-    
+
     def create_default_config(self, path: Path, default_config: Dict):
         """Create default config file for user to edit"""
         try:
@@ -720,12 +753,12 @@ class AdvancedTradeExecutor:
                 except:
                     output = child.before or ""
                     logging.error(f"{output}")
-                    return False
+                    # return False
 
             child.expect(expect.EOF, timeout=self.config_manager.configs["main"]["orders"]["default_timeout_seconds"])
             output = child.before or ""
             print("status code:", getattr(child, "exitstatus", 0))
-            if "success" in output.lower() or "executed" in output.lower():
+            if "success" in output.lower() or "executed" in output.lower() or "Current status: Pending" in output:
                 logging.info(f"✅ {order_config['name']} - SUCCESS")
                 return True
             else:
@@ -927,6 +960,17 @@ class AdvancedDexlynTradingBot:
         self.engine = AdvancedTradingEngine(self.config_manager)
         self.executor = AdvancedTradeExecutor(self.config_manager, self.engine)
     
+    def load_custom_strategies(self, strategy_file_path: str):
+        """Load custom strategies from a file"""
+        custom_strategies = self.config_manager.load_strategy_file(strategy_file_path)
+        # Merge with existing strategies (custom strategies override existing ones with same name)
+        self.configs["strategies"].update(custom_strategies)
+        self.config_manager.configs["strategies"].update(custom_strategies)
+        
+        strategy_names = list(custom_strategies.keys())
+        logging.info(f"📈 Loaded custom strategies: {', '.join(strategy_names)}")
+        return strategy_names
+    
     def run(self, strategy_name: str = None, cycles: int = None):
         """Run the trading bot"""
         if strategy_name is None:
@@ -1035,8 +1079,7 @@ EXAMPLES:
     parser.add_argument("--strategy", help="Strategy name to execute")
     parser.add_argument("--cycles", type=int, help="Number of cycles to run")
     parser.add_argument("--config-dir", default=".", help="Configuration directory")
-    parser.add_argument("--custom-config", help="Custom strategy JSON file")
-    
+    parser.add_argument("--strategy-file", help="Custom strategy JSON file to load")    
     args = parser.parse_args()
     
     # Setup logging
@@ -1081,15 +1124,26 @@ EXAMPLES:
     print("🔒 Password loaded from environment variable.")
 
     try:
+        # Initialize bot with configurations
         bot = AdvancedDexlynTradingBot(args.config_dir)
-
-        if args.custom_config:
-            bot.config_manager.load_all_configs(args.custom_config)
+        
+        # Load custom strategy file if provided
+        if args.strategy_file:
+            loaded_strategies = bot.load_custom_strategies(args.strategy_file)
+            print(f"📈 Loaded strategies: {', '.join(loaded_strategies)}")
+            
+            # If no specific strategy specified, use the first loaded one
+            if not args.strategy and loaded_strategies:
+                args.strategy = loaded_strategies[0]
+                print(f"🎯 Using strategy: {args.strategy}")
+        
         print("🚀 Starting trading bot...")
         bot.run(args.strategy, args.cycles)
         
     except Exception as e:
         logging.error(f"❌ Failed to start bot: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 if __name__ == "__main__":

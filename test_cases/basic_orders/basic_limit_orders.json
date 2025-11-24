@@ -1,0 +1,54 @@
+{
+  "basic_limit_orders": {
+    "name": "Basic Limit Orders - Standard Leverage", 
+    "description": "Test all basic limit order types with 100x leverage (3$ collateral, 300$ size)",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Limit Open LONG ETH - 100x Below Market",
+        "action": "limit_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0,
+        "price": 3400.0,
+        "description": "Limit buy with 100x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Limit Open SHORT ETH - 100x Above Market", 
+        "action": "limit_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0,
+        "price": 3600.0,
+        "description": "Limit sell with 100x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Limit Open LONG BTC - 100x Below Market",
+        "action": "limit_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0, 
+        "collateral_usd": 3.0,
+        "price": 49000.0,
+        "description": "BTC limit buy 100x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "Limit Open SHORT BTC - 100x Above Market",
+        "action": "limit_open_short",
+        "pair": "BTC_USD",
+        "wallet": "trader_2",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0, 
+        "price": 51000.0,
+        "description": "BTC limit sell 100x leverage",
+        "wait_before": 65
+      }
+    ]
+  }
+}

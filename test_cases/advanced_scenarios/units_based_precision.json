@@ -1,0 +1,52 @@
+{
+  "units_based_precision": {
+    "name": "Units-Based Precision Trading",
+    "description": "Test exact units-based orders for precision control",
+    "network": "testnet", 
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Precision ETH Long - Exact Units",
+        "action": "limit_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_units": 500000000,
+        "collateral_units": 10000000,
+        "price_units": 34950000000000,
+        "stop_loss_units": 33202500000000,
+        "take_profit_units": 36697500000000,
+        "description": "Exact units for precision"
+      },
+      {
+        "name": "Precision ETH Short - Exact Units", 
+        "action": "limit_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_units": 500000000,
+        "collateral_units": 10000000,
+        "price_units": 35050000000000,
+        "stop_loss_units": 36802500000000,
+        "take_profit_units": 33297500000000,
+        "description": "Exact units short position"
+      },
+      {
+        "name": "Custom Execution Parameters",
+        "action": "custom",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "custom_parameters": {
+          "size_units": 325000000,
+          "collateral_units": 5000000,
+          "price_units": 34500000000000,
+          "is_long": true,
+          "is_increase": true,
+          "is_market": false,
+          "stop_loss_units": 32775000000000,
+          "take_profit_units": 36225000000000,
+          "can_execute_above_price": false
+        },
+        "description": "Fully custom parameters for precision"
+      }
+    ]
+  }
+}

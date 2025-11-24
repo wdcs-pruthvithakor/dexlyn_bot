@@ -1,0 +1,64 @@
+{
+  "complete_long_lifecycle": {
+    "name": "Complete LONG Position Lifecycle - Standard Leverage",
+    "description": "Full lifecycle with 50x leverage and 60s profit delays",
+    "network": "testnet", 
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "1. Open LONG Position - 50x",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0,
+        "price": 3500.0,
+        "stop_loss": 3150.0,
+        "take_profit": 3850.0,
+        "description": "Initial long position with 50x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "2. Add Collateral Only",
+        "action": "add_collateral", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "collateral_usd": 3.0,
+        "price": 3550.0,
+        "description": "Increase collateral to 6$ total",
+        "wait_before": 65
+      },
+      {
+        "name": "3. Add to Position Size - 50x",
+        "action": "add_to_position",
+        "pair": "ETH_USD",
+        "wallet": "trader_1", 
+        "size_usd": 150.0,
+        "collateral_usd": 1.5,
+        "price": 3600.0,
+        "description": "Increase position to 450$ total (75x leverage on increased collateral)",
+        "wait_before": 65
+      },
+      {
+        "name": "4. Partial Close (50%)",
+        "action": "partial_close",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 225.0,
+        "price": 3650.0,
+        "description": "Take partial profits after 60s delay",
+        "wait_before": 65
+      },
+      {
+        "name": "5. Full Close Remainder", 
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 225.0,
+        "price": 3700.0,
+        "description": "Close remaining position after 60s delay",
+        "wait_before": 65
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "large_position_test": {
+    "name": "Large Position Size Test",
+    "description": "Test near maximum position sizes",
+    "network": "testnet", 
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Large ETH Long",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 10000.0,
+        "collateral_usd": 1000.0,
+        "price": 3500.0,
+        "description": "Large position test - 10x leverage"
+      },
+      {
+        "name": "Large ETH Short",
+        "action": "market_open_short", 
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 10000.0,
+        "collateral_usd": 1000.0,
+        "price": 3500.0,
+        "description": "Large short position test"
+      },
+      {
+        "name": "Close Large Long",
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 10000.0,
+        "price": 3550.0,
+        "description": "Close large long position"
+      },
+      {
+        "name": "Close Large Short", 
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 10000.0,
+        "price": 3450.0,
+        "description": "Close large short position"
+      }
+    ]
+  }
+}

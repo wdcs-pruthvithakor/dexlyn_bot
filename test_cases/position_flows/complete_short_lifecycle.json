@@ -1,0 +1,64 @@
+{
+  "complete_short_lifecycle": {
+    "name": "Complete SHORT Position Lifecycle - Standard Leverage", 
+    "description": "Full lifecycle with 50x leverage and 60s profit delays",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "1. Open SHORT Position - 50x",
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0, 
+        "price": 3500.0,
+        "stop_loss": 3850.0,
+        "take_profit": 3150.0,
+        "description": "Initial short position with 50x leverage",
+        "wait_before": 65
+      },
+      {
+        "name": "2. Add Collateral to Short",
+        "action": "add_collateral",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "collateral_usd": 3.0,
+        "price": 3450.0,
+        "description": "Increase collateral to 6$ total",
+        "wait_before": 65
+      },
+      {
+        "name": "3. Add to Short Position - 50x", 
+        "action": "add_to_position",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 150.0,
+        "collateral_usd": 1.5,
+        "price": 3400.0,
+        "description": "Increase short to 450$ total",
+        "wait_before": 65
+      },
+      {
+        "name": "4. Partial Close Short (50%)",
+        "action": "partial_close", 
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 225.0,
+        "price": 3350.0,
+        "description": "Take partial profits after 60s delay",
+        "wait_before": 65
+      },
+      {
+        "name": "5. Full Close Short Remainder",
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 225.0,
+        "price": 3300.0,
+        "description": "Close remaining short after 60s delay",
+        "wait_before": 65
+      }
+    ]
+  }
+}

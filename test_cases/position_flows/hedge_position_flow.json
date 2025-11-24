@@ -1,0 +1,60 @@
+{
+  "hedge_position_flow": {
+    "name": "Hedging Strategy - Long & Short Simultaneous",
+    "description": "Maintain both long and short positions for hedging",
+    "network": "testnet",
+    "cycles": 1, 
+    "orders": [
+      {
+        "name": "Open LONG ETH - Primary",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 2000.0,
+        "collateral_usd": 400.0,
+        "price": 3500.0,
+        "description": "Main long position"
+      },
+      {
+        "name": "Open SHORT ETH - Hedge", 
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 3520.0,
+        "description": "Hedge short position"
+      },
+      {
+        "name": "Adjust Hedge Ratio - Increase Short",
+        "action": "add_to_position",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 500.0,
+        "collateral_usd": 100.0, 
+        "is_long": false,
+        "is_market": true,
+        "price": 3550.0,
+        "description": "Increase hedge ratio"
+      },
+      {
+        "name": "Close Hedge First",
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 1500.0,
+        "price": 3400.0,
+        "description": "Close hedge position"
+      },
+      {
+        "name": "Close Main Long", 
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 2000.0,
+        "price": 3450.0,
+        "description": "Close main position"
+      }
+    ]
+  }
+}

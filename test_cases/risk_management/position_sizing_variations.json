@@ -1,0 +1,76 @@
+{
+  "position_sizing_variations": {
+    "name": "Leverage Strategy Tests - 5x to 150x",
+    "description": "Test different leverage ratios from conservative to aggressive",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Conservative 5x Leverage",
+        "action": "market_open_long", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 60.0,
+        "price": 3500.0,
+        "description": "5x leverage - very conservative",
+        "wait_before": 65
+      },
+      {
+        "name": "Moderate 20x Leverage",
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 600.0, 
+        "collateral_usd": 30.0,
+        "price": 3500.0,
+        "description": "20x leverage - moderate risk",
+        "wait_before": 65
+      },
+      {
+        "name": "Standard 50x Leverage",
+        "action": "market_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 300.0,
+        "collateral_usd": 6.0,
+        "price": 50000.0,
+        "description": "50x leverage - standard trading",
+        "wait_before": 65
+      },
+      {
+        "name": "Aggressive 100x Leverage", 
+        "action": "market_open_short",
+        "pair": "BTC_USD",
+        "wallet": "trader_2",
+        "size_usd": 300.0,
+        "collateral_usd": 3.0,
+        "price": 50000.0,
+        "description": "100x leverage - aggressive",
+        "wait_before": 65
+      },
+      {
+        "name": "Maximum 150x Leverage",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 450.0,
+        "collateral_usd": 3.0,
+        "price": 3500.0,
+        "description": "150x leverage - maximum risk",
+        "wait_before": 65
+      },
+      {
+        "name": "Premium 10x500 Setup",
+        "action": "market_open_short", 
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 500.0,
+        "collateral_usd": 10.0,
+        "price": 3500.0,
+        "description": "Premium setup: 10$ collateral, 500$ size (50x)",
+        "wait_before": 65
+      }
+    ]
+  }
+}

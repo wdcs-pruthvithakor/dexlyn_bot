@@ -1,0 +1,49 @@
+{
+  "martingale_recovery": {
+    "name": "Martingale-Style Recovery Strategy",
+    "description": "Double down on losing positions (USE WITH CAUTION)",
+    "network": "testnet",
+    "cycles": 1, 
+    "orders": [
+      {
+        "name": "Initial ETH Long",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 500.0,
+        "collateral_usd": 100.0,
+        "price": 3500.0,
+        "description": "Initial position"
+      },
+      {
+        "name": "Double Down - Level 1",
+        "action": "market_open_long", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 3400.0,
+        "description": "First double down"
+      },
+      {
+        "name": "Double Down - Level 2",
+        "action": "market_open_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 2000.0,
+        "collateral_usd": 400.0,
+        "price": 3300.0,
+        "description": "Second double down"
+      },
+      {
+        "name": "Recovery Close", 
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 3500.0,
+        "price": 3400.0,
+        "description": "Close all positions at recovery"
+      }
+    ]
+  }
+}

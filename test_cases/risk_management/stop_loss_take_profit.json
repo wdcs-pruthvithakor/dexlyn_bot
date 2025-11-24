@@ -1,0 +1,56 @@
+{
+  "stop_loss_take_profit": {
+    "name": "Stop Loss & Take Profit Configurations",
+    "description": "Test various stop loss and take profit settings",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Tight SL/TP Long (5%)",
+        "action": "market_open_long",
+        "pair": "ETH_USD", 
+        "wallet": "trader_1",
+        "size_usd": 500.0,
+        "collateral_usd": 10.0,
+        "price": 3500.0,
+        "stop_loss": 3325.0,
+        "take_profit": 3675.0,
+        "description": "5% stop loss and take profit"
+      },
+      {
+        "name": "Wide SL/TP Short (15%)",
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 500.0,
+        "collateral_usd": 10.0,
+        "price": 3500.0, 
+        "stop_loss": 4025.0,
+        "take_profit": 2975.0,
+        "description": "15% stop loss and take profit"
+      },
+      {
+        "name": "No SL Long - Risk On",
+        "action": "market_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 500.0,
+        "collateral_usd": 10.0,
+        "price": 50000.0,
+        "take_profit": 57500.0,
+        "description": "No stop loss, take profit only"
+      },
+      {
+        "name": "SL Only Short - Protective", 
+        "action": "market_open_short",
+        "pair": "BTC_USD",
+        "wallet": "trader_2",
+        "size_usd": 500.0,
+        "collateral_usd": 10.0,
+        "price": 50000.0,
+        "stop_loss": 55000.0,
+        "description": "Stop loss only, no take profit"
+      }
+    ]
+  }
+}

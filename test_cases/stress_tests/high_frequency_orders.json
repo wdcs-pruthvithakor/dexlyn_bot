@@ -1,0 +1,68 @@
+{
+  "high_frequency_orders": {
+    "name": "High Frequency Order Test",
+    "description": "Rapid order execution stress test",
+    "network": "testnet",
+    "cycles": 1,
+    "orders": [
+      {
+        "name": "Rapid Order 1",
+        "action": "market_open_long", 
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 3500.0,
+        "wait_before": 1
+      },
+      {
+        "name": "Rapid Order 2",
+        "action": "market_open_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2", 
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 3500.0,
+        "wait_before": 1
+      },
+      {
+        "name": "Rapid Order 3",
+        "action": "market_open_long",
+        "pair": "BTC_USD",
+        "wallet": "trader_1",
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 50000.0,
+        "wait_before": 1
+      },
+      {
+        "name": "Rapid Order 4", 
+        "action": "market_open_short",
+        "pair": "BTC_USD",
+        "wallet": "trader_2",
+        "size_usd": 1000.0,
+        "collateral_usd": 200.0,
+        "price": 50000.0,
+        "wait_before": 1
+      },
+      {
+        "name": "Rapid Close 1",
+        "action": "market_close_long",
+        "pair": "ETH_USD",
+        "wallet": "trader_1",
+        "size_usd": 1000.0,
+        "price": 3510.0,
+        "wait_before": 1
+      },
+      {
+        "name": "Rapid Close 2", 
+        "action": "market_close_short",
+        "pair": "ETH_USD",
+        "wallet": "trader_2",
+        "size_usd": 1000.0,
+        "price": 3490.0,
+        "wait_before": 1
+      }
+    ]
+  }
+}

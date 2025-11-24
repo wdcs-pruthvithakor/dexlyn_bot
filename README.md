@@ -7,7 +7,8 @@
 4. [Order Field Reference](#-order-field-reference)
 5. [Trading Strategies](#-trading-strategies)
 6. [Advanced Features](#️-advanced-features)
-7. [Troubleshooting](#-troubleshooting)
+7. [Test Execution Commands](#-test-execution-commands)
+8. [Troubleshooting](#-troubleshooting)
 
 ## 🎯 Overview
 
@@ -465,9 +466,6 @@ python dexlyn_bot.py --strategy basic_cycle --cycles 3
 
 # Use custom config directory
 python dexlyn_bot.py --config-dir ./my_configs
-
-# Run custom strategy file
-python dexlyn_bot.py --custom-config my_strategy.json
 ```
 
 ### Advanced Usage Examples
@@ -479,6 +477,57 @@ python dexlyn_bot.py --strategy multi_wallet --cycles 5
 # Quick test with single order
 python dexlyn_bot.py --custom-config quick_test.json --cycles 1
 ```
+
+
+## 📋 Test Execution Commands
+
+### Individual Test Categories
+```bash
+# Use the main bot with custom strategy file
+python dexlyn_bot.py --strategy-file test_cases/basic_orders/basic_market_orders.json
+
+# Run test suite
+python run_all_tests.py --suite basic_market_orders
+
+# List all available tests
+python run_all_tests.py --list
+```
+
+## 🎯 Test Coverage Summary
+
+### Order Types Covered:
+- ✅ Market Open Long/Short
+- ✅ Limit Open Long/Short  
+- ✅ Market Close Long/Short
+- ✅ Limit Close Long/Short
+- ✅ Add to Position
+- ✅ Add Collateral
+- ✅ Partial Close
+- ✅ Full Close
+- ✅ Custom Orders
+
+### Position Flows Covered:
+- ✅ Complete Long Lifecycle
+- ✅ Complete Short Lifecycle  
+- ✅ Hedging Strategies
+- ✅ Multi-Pair Trading
+- ✅ Portfolio Distribution
+- ✅ Scalping Strategies
+- ✅ Recovery Strategies
+
+### Risk Management Covered:
+- ✅ Stop Loss Configurations
+- ✅ Take Profit Configurations
+- ✅ Position Sizing Variations
+- ✅ Leverage Management
+- ✅ Multi-Wallet Risk Distribution
+
+### Advanced Scenarios:
+- ✅ Units-Based Precision Trading
+- ✅ High Frequency Ordering
+- ✅ Large Position Testing
+- ✅ Multi-Cycle Strategies
+- ✅ Custom Parameter Control
 
 ## 🔧 Troubleshooting
 
